@@ -49,6 +49,31 @@ cmp eax, 1
 je if_yes
 jne if_no
 
+
+
+if_yes:
+    mov eax, 4
+    mov ebx, 1
+    mov ecx, msg_y
+    mov edx, len_y
+    int 0x80
+    jmp main
+
+if_no:
+    mov eax, 4
+    mov ebx, 1
+    mov ecx, msg_n
+    mov edx, len_n
+    int 0x80
+    jmp main
+
+
+exit:
+    mov eax, 1      ;exit...
+    mov ebx, 0
+    int 0x80
+
+
 is_palindrome:
     push ebp
     mov ebp, esp
@@ -62,10 +87,9 @@ is_palindrome:
     cmp ecx,1
     jng .pal_true
 
-    mov eax, ecx
-    dec eax
-    mov edi, [ebp+8]
-    add edi, eax    
+    mov edi, esi
+    add edi, ecx
+    dec edi
 
     mov edx, ecx
     shr edx, 1
@@ -98,25 +122,3 @@ is_palindrome:
     mov esp, ebp
     pop ebp
     ret
-
-if_yes:
-    mov eax, 4
-    mov ebx, 1
-    mov ecx, msg_y
-    mov edx, len_y
-    int 0x80
-    jmp main
-
-if_no:
-    mov eax, 4
-    mov ebx, 1
-    mov ecx, msg_n
-    mov edx, len_n
-    int 0x80
-    jmp main
-
-
-exit:
-    mov eax, 1      ;exit...
-    mov ebx, 0
-    int 0x80
