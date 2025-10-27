@@ -13,6 +13,8 @@ section .bss
 buffer resb 1024
 
 section .text
+GLOBAL _start
+
 _start:
 
 main:
@@ -38,6 +40,7 @@ dec eax
 push eax
 push buffer
 call is_palindrome
+add esp,8
 
 cmp eax, 1
 je if_yes
