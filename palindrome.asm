@@ -31,20 +31,23 @@ mov ecx, buffer
 mov edx, 1024
 int 0x80
 
+cmp eax,0
+je exit
+
 mov ebx, buffer     ;assuming that pressing enter is a mistake. exit program
 mov al, [ebx]
 cmp al, 10
 je exit
 
 dec eax
-push eax
 push buffer
+push eax
 call is_palindrome
 add esp,8
 
 cmp eax, 1
 je if_yes
-jmp if_no
+jne if_no
 
 is_palindrome:
     push ebp
@@ -102,6 +105,7 @@ if_yes:
     mov ecx, msg_y
     mov edx, len_y
     int 0x80
+    jmp main
 
 if_no:
     mov eax, 4
@@ -109,7 +113,7 @@ if_no:
     mov ecx, msg_n
     mov edx, len_n
     int 0x80
-
+    jmp main
 
 
 exit:
