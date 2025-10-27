@@ -34,8 +34,64 @@ mov al, [ebx]
 cmp al, 10
 je exit
 
+dec eax
+push eax
+push buffer
+call is_palindrome
+
+cmp eax, 1
+je if_yes
+jmp_if no
+
 is_palindrome:
-    
+    push ebp
+    mov ebp, esp
+
+    push esi
+    push edi
+
+    mov esi [ebp+8]
+    mov ecx, [ebp+12]
+
+    cmp ecx,1
+    jng .pal_true
+
+    mov eax, ecx
+    dec eax
+    mov edi, [ebp+8]
+    add edi, eax    
+
+    mov edx, ecx
+    shr edx, 1
+
+.cmp_loop
+    cmp edx, 0
+    je .pal_true
+
+    mov al, [esi]
+    mov bl, [edi]
+    cmp al, bl
+    jne .pal_false
+
+    inc esi
+    dec edi
+    dec edx
+    jmp .cmp_loop
+
+.pal_true:
+    mov eax, 1
+    jmp .end
+
+.pal_false:
+    mov eax, 0
+    jmp .end    
+
+.done:
+    pop edi
+    pop esi
+    mov esp, ebp
+    pop ebp
+    ret
 
 if_yes:
     mov eax, 4
@@ -50,10 +106,6 @@ if_no:
     mov ecx, msg_n
     mov edx, len_n
     int 0x80
-
-
-
-
 
 
 
