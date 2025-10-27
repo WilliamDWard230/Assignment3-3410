@@ -41,7 +41,7 @@ call is_palindrome
 
 cmp eax, 1
 je if_yes
-jmp_if no
+jmp if_no
 
 is_palindrome:
     push ebp
@@ -50,7 +50,7 @@ is_palindrome:
     push esi
     push edi
 
-    mov esi [ebp+8]
+    mov esi, [ebp+8]
     mov ecx, [ebp+12]
 
     cmp ecx,1
@@ -64,7 +64,7 @@ is_palindrome:
     mov edx, ecx
     shr edx, 1
 
-.cmp_loop
+.cmp_loop:
     cmp edx, 0
     je .pal_true
 
@@ -86,7 +86,7 @@ is_palindrome:
     mov eax, 0
     jmp .end    
 
-.done:
+.end:
     pop edi
     pop esi
     mov esp, ebp
