@@ -1,3 +1,5 @@
+;William Ward 10/27/25
+;CSC-3410 Assignment 3
 section .data 
 
 msg db "Please enter a string:" ,10
@@ -10,7 +12,7 @@ msg_n db "It is not a palindrome",10
 len_n equ $ - msg_n
 
 section .bss
-buffer resb 1024
+buffer resb 1024        ;reserve for max length of user input
 
 section .text
 GLOBAL _start
@@ -31,7 +33,7 @@ mov ecx, buffer
 mov edx, 1024
 int 0x80
 
-cmp eax,0           ;check if empty
+cmp byte [buffer], 10       ;check if user wants to exit
 je exit
 
 dec eax             ;remove newline... under assumption always going to be a new line
@@ -70,19 +72,19 @@ exit:
     int 0x80
 
 
-is_palindrome:              
+is_palindrome:              ;the stack
     push ebp
     mov ebp, esp
     push esi
     push edi
 
-    mov esi, [ebp+8]
-    mov ecx, [ebp+12]
+    mov esi, [ebp+8]        ;start of string
+    mov ecx, [ebp+12]       ;length of string
 
-    cmp ecx,1
+    cmp ecx,1               ;if length is 1 then it is a palindrome
     jng .pal_true
 
-    mov edi, esi
+    mov edi, esi            
     add edi, ecx
     dec edi
 
@@ -90,13 +92,13 @@ is_palindrome:
     shr edx, 1
 
 .cmp_loop:
-    cmp edx, 0
+    cmp edx, 0          ;check if characters are exhausted
     je .pal_true
 
-    mov al, [esi]
-    mov bl, [edi]
-    cmp al, bl
-    jne .pal_false
+    mov al, [esi]       ;character at front
+    mov bl, [edi]       ;char at end
+    cmp al, bl          ;compare
+    jne .pal_false      ; check flag for equality
 
     inc esi
     dec edi
@@ -112,7 +114,7 @@ is_palindrome:
     jmp .end  
 
 .end:
-    pop edi
+    pop edi             ;clean up and return to main with eax true false value
     pop esi
     mov esp, ebp
     pop ebp
