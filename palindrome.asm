@@ -31,27 +31,23 @@ mov ecx, buffer
 mov edx, 1024
 int 0x80
 
-cmp eax,0
+cmp eax,0           ;check if empty
 je exit
 
-mov ebx, buffer     ;assuming that pressing enter is a mistake. exit program
-mov al, [ebx]
-cmp al, 10
-je exit
+dec eax             ;remove newline... under assumption always going to be a new line
 
-dec eax
-push buffer
 push eax
+push buffer
 call is_palindrome
 add esp,8
 
-cmp eax, 1
+cmp eax, 1          ;check the resulting eax value to determine if palindrome
 je if_yes
 jne if_no
 
 
 
-if_yes:
+if_yes:                     ;print "It is a palindome" and return to main loop to accept another string
     mov eax, 4
     mov ebx, 1
     mov ecx, msg_y
@@ -59,7 +55,7 @@ if_yes:
     int 0x80
     jmp main
 
-if_no:
+if_no:                      ;print "It is not a palindrome" and return to main loop to accept another string
     mov eax, 4
     mov ebx, 1
     mov ecx, msg_n
@@ -74,10 +70,9 @@ exit:
     int 0x80
 
 
-is_palindrome:
+is_palindrome:              
     push ebp
     mov ebp, esp
-
     push esi
     push edi
 
@@ -108,13 +103,13 @@ is_palindrome:
     dec edx
     jmp .cmp_loop
 
-.pal_true:
+.pal_true:              ;if true set eax to 1 and move to end sequence
     mov eax, 1
     jmp .end
 
-.pal_false:
-    mov eax, 0
-    jmp .end    
+.pal_false:             ;if false set eax to 0 and move to end sequence
+    mov eax, 0  
+    jmp .end  
 
 .end:
     pop edi
